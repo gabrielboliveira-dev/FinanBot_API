@@ -1,12 +1,13 @@
-package br.com.texsistemas.financemanager;
+package com.finanbot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GerenciadorDeFinancasApplication {
+public class FinanbotApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(GerenciadorDeFinancasApplication.class, args);
+		SpringApplication.run(FinanbotApplication.class, args);
 	}
+
 }
