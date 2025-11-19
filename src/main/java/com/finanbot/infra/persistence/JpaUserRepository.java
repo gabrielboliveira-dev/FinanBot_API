@@ -7,6 +7,8 @@ import com.finanbot.infra.persistence.mapper.UserMapper;
 import com.finanbot.infra.persistence.repository.SpringUserRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class JpaUserRepository implements UserRepository {
 
@@ -33,5 +35,11 @@ public class JpaUserRepository implements UserRepository {
     @Override
     public boolean existsByCpf(String cpf) {
         return springUserRepository.existsByCpf(cpf);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        Optional<UserEntity> entityOptional = springUserRepository.findByEmail(email);
+        return entityOptional.map(userMapper::toDomain);
     }
 }
