@@ -1,10 +1,10 @@
 package com.finanbot.infra.config;
 
 import com.finanbot.core.usecase.AuthenticateUserUseCase;
+import com.finanbot.core.usecase.CreateAccountUseCase;
+import com.finanbot.core.usecase.CreateTransactionUseCase;
 import com.finanbot.core.usecase.CreateUserUseCase;
-import com.finanbot.core.usecase.port.PasswordEncoder;
-import com.finanbot.core.usecase.port.TokenGateway;
-import com.finanbot.core.usecase.port.UserRepository;
+import com.finanbot.core.usecase.port.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,5 +22,17 @@ public class CoreInjectionConfig {
             PasswordEncoder passwordEncoder,
             TokenGateway tokenGateway) {
         return new AuthenticateUserUseCase(userRepository, passwordEncoder, tokenGateway);
+    }
+
+    @Bean
+    public CreateAccountUseCase createAccountUseCase(AccountRepository accountRepository) {
+        return new CreateAccountUseCase(accountRepository);
+    }
+
+    @Bean
+    public CreateTransactionUseCase createTransactionUseCase(
+            TransactionRepository transactionRepository,
+            AccountRepository accountRepository) {
+        return new CreateTransactionUseCase(transactionRepository, accountRepository);
     }
 }
