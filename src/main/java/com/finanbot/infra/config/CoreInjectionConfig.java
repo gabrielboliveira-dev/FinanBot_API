@@ -1,9 +1,6 @@
 package com.finanbot.infra.config;
 
-import com.finanbot.core.usecase.AuthenticateUserUseCase;
-import com.finanbot.core.usecase.CreateAccountUseCase;
-import com.finanbot.core.usecase.CreateTransactionUseCase;
-import com.finanbot.core.usecase.CreateUserUseCase;
+import com.finanbot.core.usecase.*;
 import com.finanbot.core.usecase.port.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,5 +31,15 @@ public class CoreInjectionConfig {
             TransactionRepository transactionRepository,
             AccountRepository accountRepository) {
         return new CreateTransactionUseCase(transactionRepository, accountRepository);
+    }
+
+    @Bean
+    public CreateCategoryUseCase createCategoryUseCase(CategoryRepository categoryRepository) {
+        return new CreateCategoryUseCase(categoryRepository);
+    }
+
+    @Bean
+    public ProcessChatUseCase processChatUseCase(ChatGateway chatGateway, NluGateway nluGateway) {
+        return new ProcessChatUseCase(chatGateway, nluGateway);
     }
 }
