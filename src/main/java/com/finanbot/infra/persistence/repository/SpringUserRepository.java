@@ -10,4 +10,6 @@ public interface SpringUserRepository extends JpaRepository<UserEntity, UUID> {
     boolean existsByCpf(String cpf);
 
     Optional<UserEntity> findByEmail(String email);
+
+    Optional<UserEntity> findByTelegramChatId(String telegramChatId);
 }

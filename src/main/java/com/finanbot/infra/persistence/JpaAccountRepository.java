@@ -7,8 +7,10 @@ import com.finanbot.infra.persistence.mapper.AccountMapper;
 import com.finanbot.infra.persistence.repository.SpringAccountRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 public class JpaAccountRepository implements AccountRepository {
@@ -35,5 +37,13 @@ public class JpaAccountRepository implements AccountRepository {
     @Override
     public boolean existsByNameAndUserId(String name, UUID userId) {
         return springAccountRepository.existsByNameAndUserId(name, userId);
+    }
+
+    @Override
+    public List<Account> findAllByUserId(UUID userId) {
+        return springAccountRepository.findAllByUserId(userId)
+                .stream()
+                .map(accountMapper::toDomain)
+                .collect(Collectors.toList());
     }
 }

@@ -39,7 +39,21 @@ public class CoreInjectionConfig {
     }
 
     @Bean
-    public ProcessChatUseCase processChatUseCase(ChatGateway chatGateway, NluGateway nluGateway) {
-        return new ProcessChatUseCase(chatGateway, nluGateway);
+    public ProcessChatUseCase processChatUseCase(
+            ChatGateway chatGateway,
+            NluGateway nluGateway,
+            UserRepository userRepository,
+            CreateTransactionUseCase createTransactionUseCase,
+            AccountRepository accountRepository,
+            CategoryRepository categoryRepository) {
+
+        return new ProcessChatUseCase(
+                chatGateway,
+                nluGateway,
+                userRepository,
+                createTransactionUseCase,
+                accountRepository,
+                categoryRepository
+        );
     }
 }

@@ -42,4 +42,10 @@ public class JpaUserRepository implements UserRepository {
         Optional<UserEntity> entityOptional = springUserRepository.findByEmail(email);
         return entityOptional.map(userMapper::toDomain);
     }
+
+    @Override
+    public Optional<User> findByTelegramChatId(String telegramChatId) {
+        return springUserRepository.findByTelegramChatId(telegramChatId)
+                .map(userMapper::toDomain);
+    }
 }

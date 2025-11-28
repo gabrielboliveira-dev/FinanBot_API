@@ -10,4 +10,6 @@ public interface UserRepository {
     boolean existsByCpf(String cpf);
 
     Optional<User> findByEmail(String email);
+
+    Optional<User> findByTelegramChatId(String telegramChatId);
 }

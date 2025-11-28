@@ -15,7 +15,8 @@ public class UserMapper {
                 user.getCpf(),
                 user.getPassword(),
                 user.getCreatedAt(),
-                user.isActive()
+                user.isActive(),
+                user.getTelegramChatId()
         );
     }
 
@@ -27,7 +28,8 @@ public class UserMapper {
                 entity.getCpf(),
                 entity.getPassword(),
                 entity.getCreatedAt(),
-                entity.isActive()
+                entity.isActive(),
+                entity.getTelegramChatId()
         );
     }
 }

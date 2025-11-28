@@ -1,5 +1,6 @@
 package com.finanbot.infra.persistence.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -24,4 +25,7 @@ public class UserEntity {
     private String password;
     private LocalDateTime createdAt;
     private boolean active;
+
+    @Column(name = "telegram_chat_id")
+    private String telegramChatId;
 }

@@ -2,15 +2,14 @@ package com.finanbot.core.usecase;
 
 import com.finanbot.core.usecase.dto.IncomingChatMessage;
 import com.finanbot.core.usecase.dto.NluResult;
-import com.finanbot.core.usecase.port.ChatGateway;
-import com.finanbot.core.usecase.port.NluGateway;
+import com.finanbot.core.usecase.port.*;
 
 public class ProcessChatUseCase {
 
     private final ChatGateway chatGateway;
     private final NluGateway nluGateway;
 
-    public ProcessChatUseCase(ChatGateway chatGateway, NluGateway nluGateway) {
+    public ProcessChatUseCase(ChatGateway chatGateway, NluGateway nluGateway, UserRepository userRepository, CreateTransactionUseCase createTransactionUseCase, AccountRepository accountRepository, CategoryRepository categoryRepository) {
         this.chatGateway = chatGateway;
         this.nluGateway = nluGateway;
     }

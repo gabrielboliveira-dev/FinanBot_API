@@ -13,6 +13,8 @@ public class User {
     private final LocalDateTime createdAt;
     private boolean active;
 
+    private String telegramChatId;
+
     public User(String name, String email, String cpf, String password) {
         this.id = UUID.randomUUID();
         this.name = name;
@@ -21,10 +23,11 @@ public class User {
         this.password = password;
         this.createdAt = LocalDateTime.now();
         this.active = true;
+        this.telegramChatId = null;
         validate();
     }
 
-    public User(UUID id, String name, String email, String cpf, String password, LocalDateTime createdAt, boolean active) {
+    public User(UUID id, String name, String email, String cpf, String password, LocalDateTime createdAt, boolean active, String telegramChatId) {
         this.id = id;
         this.name = name;
         this.email = new Email(email);
@@ -32,6 +35,7 @@ public class User {
         this.password = password;
         this.createdAt = createdAt;
         this.active = active;
+        this.telegramChatId = telegramChatId;
     }
 
     private void validate() {
@@ -51,6 +55,13 @@ public class User {
         this.active = false;
     }
 
+    public void linkTelegramAccount(String chatId) {
+        if (chatId == null || chatId.trim().isEmpty()) {
+            throw new IllegalArgumentException("ID do Chat inválido.");
+        }
+        this.telegramChatId = chatId;
+    }
+
     public UUID getId() { return id; }
     public String getName() { return name; }
     public String getEmail() { return email.getValue(); }
@@ -58,4 +69,5 @@ public class User {
     public String getPassword() { return password; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public boolean isActive() { return active; }
+    public String getTelegramChatId() { return telegramChatId; }
 }
