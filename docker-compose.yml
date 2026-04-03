@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   postgres:
     image: postgres:15-alpine
@@ -11,15 +13,91 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-    rabbitmq:
-      image: rabbitmq:3-management
-      container_name: finanbot-mq
-      ports:
-        - "5672:5672"
-        - "15672:15672"
-      environment:
-        RABBITMQ_DEFAULT_USER: user
-        RABBITMQ_DEFAULT_PASS: password
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: finanbot-mq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+
+  finanbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: finanbot-app
+    hostname: finanbot-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/finanbot
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_RABBITMQ_HOST: rabbitmq
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,prometheus"
+      MANAGEMENT_METRICS_TAGS_APPLICATION: "finanbot"
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  ml-service:
+    build:
+      context: ./ml-service
+      dockerfile: Dockerfile
+    container_name: finanbot-ml-service
+    ports:
+      - "5000:5000"
+    environment:
+      PYTHONUNBUFFERED: 1
+    depends_on:
+      - rabbitmq
+
+  prometheus:
+    image: prom/prometheus
+    container_name: finanbot-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command: --config.file=/etc/prometheus/prometheus.yml --web.enable-lifecycle
+    depends_on:
+      - finanbot
+
+  grafana:
+    image: grafana/grafana
+    container_name: finanbot-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+      - loki # Grafana também dependerá do Loki para logs
+
+  loki:
+    image: grafana/loki:latest
+    container_name: finanbot-loki
+    ports:
+      - "3100:3100" # Porta padrão do Loki
+    volumes:
+      - loki_data:/loki # Persistência dos dados do Loki
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: finanbot-promtail
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro # Para ler os logs dos contêineres
+      - /var/run/docker.sock:/var/run/docker.sock:ro # Para obter metadados dos contêineres
+      - ./promtail:/etc/promtail # Mapeia o arquivo de configuração do Promtail
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki # Promtail envia logs para o Loki
 
 volumes:
   postgres_data:
+  prometheus_data:
+  grafana_data:
+  loki_data: # Novo volume para dados do Loki

@@ -6,6 +6,7 @@
   * [Principais Funcionalidades]
   * [Stack Tecnológico]
   * [Arquitetura]
+  * [Observabilidade]
   * [Como Começar]
   * [Uso da API RESTful]
   * [Roteiro de Desenvolvimento (Roadmap)]
@@ -30,13 +31,12 @@ O grande diferencial do FinanBot é sua capacidade de transformar a gestão fina
 
 #### Automação e Praticidade
 
-  * **Leitor de QR Code de Nota Fiscal (NFC-e):** Envie a foto do QR Code de uma nota fiscal e o FinanBot extrai e registra a compra automaticamente.
   * **Detecção de Despesas Recorrentes:** O bot identifica assinaturas e contas mensais e sugere o cadastro automático.
 
 #### Planejamento e Visão de Futuro
 
   * **Módulo de Metas:** Crie objetivos financeiros (ex: "Viagem", "Entrada do Apartamento"), defina prazos e valores, e acompanhe seu progresso.
-  * **Previsão de Fluxo de Caixa:** Com base no seu histórico, o bot projeta seu saldo futuro para evitar surpresas no fim do mês.
+  * **Previsão de Fluxo de Caixa Inteligente:** Com base no seu histórico e utilizando um serviço dedicado de Machine Learning em Python, o bot projeta seu saldo futuro para evitar surpresas no fim do mês.
   * **Orçamentos Inteligentes:** Defina orçamentos por categoria e receba insights sobre onde você pode economizar.
 
 #### Finanças Colaborativas
@@ -52,21 +52,22 @@ O grande diferencial do FinanBot é sua capacidade de transformar a gestão fina
 
 | Categoria                | Tecnologia                                                              |
 | ------------------------ | ----------------------------------------------------------------------- |
-| **Linguagem & Framework** | Java 17, Spring Boot 3                                                  |
+| **Linguagem & Framework** | Java 17, Spring Boot 3, Python (para ML Service), Flask                 |
 | **Banco de Dados** | PostgreSQL, Flyway (migrations)                                         |
 | **Persistência** | Spring Data JPA, Hibernate                                              |
 | **Autenticação & Segurança** | Spring Security, JSON Web Token (JWT)                                   |
-| **Inteligência Artificial**| Rasa Open Source (para NLU, auto-hospedado)                             |
+| **Inteligência Artificial**| Rasa Open Source (para NLU, auto-hospedado), Scikit-learn, Pandas       |
 | **Mensageria Assíncrona** | RabbitMQ                                                                |
-| **Testes** | JUnit 5, Mockito, MockMvc, Testcontainers                               |
+| **Testes** | JUnit 5, Mockito, MockMvc, Testcontainers, RestAssured (E2E)            |
 | **Interface** | API de Bots do Telegram                                                 |
 | **Documentação da API** | Springdoc OpenAPI (Swagger UI)                                          |
+| **Monitoramento & Logs** | Prometheus, Grafana, Loki, Promtail                                     |
 | **Ferramentas Auxiliares** | Maven, Lombok, MapStruct                                                |
 | **Ambiente de Execução** | Docker, Docker Compose                                                  |
 
 ### Arquitetura
 
-O projeto adota a **Arquitetura Limpa (Clean Architecture)**, garantindo a separação de responsabilidades e a independência de frameworks. A comunicação entre o bot e os serviços de processamento pesado (NLU, OCR) é feita de forma assíncrona via **RabbitMQ** para garantir resiliência e uma resposta rápida ao usuário.
+O projeto adota a **Arquitetura Limpa (Clean Architecture)**, garantindo a separação de responsabilidades e a independência de frameworks. A comunicação entre o bot e os serviços de processamento pesado (NLU, Machine Learning) é feita de forma assíncrona via **RabbitMQ** para garantir resiliência e uma resposta rápida ao usuário. Um serviço dedicado em Python lida com a lógica de Machine Learning para previsões.
 
 ```mermaid
 graph TD
@@ -76,7 +77,16 @@ graph TD
     D -- Salva/Consulta --> E[PostgreSQL DB];
     D -- Processa IA --> F[Rasa NLU];
     D -- Envia Resposta --> B;
+    B -- Requisição ML --> G[ML Service (Python)];
+    G -- Retorna Previsão --> B;
 ```
+
+### Observabilidade
+
+Para garantir a saúde e o desempenho da plataforma, o FinanBot integra um robusto stack de observabilidade:
+
+  * **Métricas com Prometheus & Grafana:** O Prometheus coleta métricas detalhadas da aplicação Spring Boot (via Actuator) e de outros serviços. O Grafana oferece dashboards interativos para visualizar essas métricas, permitindo o monitoramento em tempo real do sistema.
+  * **Logs Centralizados com Loki & Promtail:** O Promtail coleta os logs de todos os contêineres Docker e os envia para o Loki. O Loki armazena e indexa esses logs, que podem ser facilmente consultados e analisados através da interface do Grafana, facilitando a depuração e o diagnóstico de problemas.
 
 ### Como Começar
 
@@ -105,7 +115,7 @@ Siga os passos abaixo para executar a plataforma completa localmente.
 
 #### 3\. Executando com Docker Compose
 
-O `docker-compose.yml` está configurado para orquestrar todos os contêineres necessários (Aplicação, Banco de Dados, Fila e NLU).
+O `docker-compose.yml` está configurado para orquestrar todos os contêineres necessários (Aplicação Spring Boot, Serviço ML Python, Banco de Dados, Fila, NLU, Prometheus, Grafana, Loki e Promtail).
 
 Execute o comando na raiz do projeto:
 
@@ -120,7 +130,9 @@ A aplicação pode levar alguns minutos para iniciar todos os serviços pela pri
 Após a inicialização, a API RESTful estará disponível em `http://localhost:8080`.
 
 A documentação interativa da API (Swagger UI), gerada pelo Springdoc, pode ser acessada em:
-**[http://localhost:8080/swagger-ui.html](https://www.google.com/search?q=http://localhost:8080/swagger-ui.html)**
+**[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)**
+
+Testes de ponta a ponta (E2E) para a API podem ser executados usando a classe `FinanBotE2ETest` (localizada em `src/test/java/com/finanbot/e2e/FinanBotE2ETest.java`), que utiliza Testcontainers para orquestrar o ambiente e RestAssured para interagir com os endpoints.
 
 ### ⭐ Melhoria Futura: Conexão com Open Finance
 
