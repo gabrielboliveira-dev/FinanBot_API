@@ -1,96 +1,52 @@
-# FinanBot: Seu Co-piloto Financeiro Pessoal no Telegram
+# 🤖 FinanBot: Seu Co-piloto Financeiro Pessoal
 
-### Sumário
+*Gestão financeira inteligente e conversacional, impulsionada por uma API robusta e IA.*
 
-  * [Descrição do Projeto]
-  * [Principais Funcionalidades]
-  * [Stack Tecnológico]
-  * [Arquitetura]
-  * [Observabilidade]
-  * [Como Começar]
-  * [Uso da API RESTful]
-  * [Roteiro de Desenvolvimento (Roadmap)]
-  * [Como Contribuir]
-  * [Licença]
+---
 
------
+### 🎯 Sobre o Projeto
 
-### Descrição do Projeto
+O FinanBot é uma plataforma de gerenciamento financeiro pessoal projetada para simplificar e automatizar o controle de finanças. O projeto resolve o desafio de transformar a complexa tarefa de gestão financeira em uma experiência conversacional e proativa, utilizando uma API RESTful como núcleo e um bot no Telegram como interface principal.
 
-O **FinanBot** é uma plataforma completa de gerenciamento financeiro pessoal, projetada com uma API RESTful robusta como base e um bot inteligente no Telegram como a principal interface de usuário. Construído com **Spring Boot 3**, o projeto segue rigorosamente os princípios de **Arquitetura Limpa (Clean Architecture)**, **SOLID** e **Clean Code** para garantir uma base de código testável, escalável e de fácil manutenção.
+A plataforma permite que os usuários registrem transações, definam metas, criem orçamentos e obtenham previsões de fluxo de caixa por meio de linguagem natural, eliminando a necessidade de planilhas e aplicativos manuais.
 
-O grande diferencial do FinanBot é sua capacidade de transformar a gestão financeira em uma experiência simples e conversacional. Através de um assistente proativo no Telegram, ele automatiza tarefas tediosas, oferece insights preditivos e conecta suas finanças aos seus objetivos de vida, atuando como um verdadeiro co-piloto para sua jornada financeira.
+### 🛠️ Tecnologias e Ferramentas
 
-### Principais Funcionalidades
+A stack foi escolhida para garantir performance, escalabilidade e manutenibilidade, utilizando tecnologias modernas e consolidadas no mercado.
 
-#### Interação Inteligente via Telegram
+| Categoria              | Tecnologia                 | Justificativa                                                                                                                   |
+| :--------------------- | :------------------------- | :------------------------------------------------------------------------------------------------------------------------------ |
+| **Backend**            | Java 17, Spring Boot 3     | Ecossistema robusto, maduro e de alta performance para a construção de APIs RESTful seguras e escaláveis.                         |
+| **Banco de Dados**     | PostgreSQL, Flyway         | Um banco de dados relacional poderoso e confiável, com migrations gerenciadas pelo Flyway para garantir consistência.             |
+| **Segurança**          | Spring Security, JWT       | Implementação padrão de mercado para autenticação e autorização, garantindo a proteção dos dados do usuário.                     |
+| **IA & Machine Learning** | Python, Scikit-learn       | Stack especializada para Processamento de Linguagem Natural (NLU) e para o serviço de previsão de fluxo de caixa.               |
+| **Mensageria**         | RabbitMQ                   | Garante a comunicação assíncrona entre a API principal e os serviços de IA, aumentando a resiliência e a responsividade.        |
+| **Testes**             | JUnit 5, Mockito, Testcontainers | Estratégia de testes completa, cobrindo desde testes de unidade até testes de integração com ambiente real (via Testcontainers). |
+| **Ambiente**           | Docker, Docker Compose     | Containerização de toda a aplicação, garantindo um ambiente de desenvolvimento e produção consistente e de fácil configuração.    |
+| **Observabilidade**    | Prometheus, Grafana, Loki  | Stack completa para monitoramento de métricas, visualização de dashboards e centralização de logs.                              |
 
-  * **Registro Conversacional (NLU):** Adicione despesas e receitas usando linguagem natural. Ex: *"gastei 55,90 no almoço com o cartão do Itaú"*.
-  * **Comandos e Teclados Interativos:** Use comandos (`/resumo`, `/metas`) e botões para uma navegação rápida e intuitiva.
-  * **Alertas Proativos:** Receba notificações sobre o fechamento da fatura do cartão, proximidade de atingir um orçamento ou lembretes de contas a pagar.
+### 🏗️ Arquitetura
 
-#### Automação e Praticidade
+O projeto é estruturado com base nos princípios da **Arquitetura Limpa (Clean Architecture)**, promovendo uma clara separação de responsabilidades em camadas (Domínio, Aplicação, Infraestrutura). Essa abordagem garante um baixo acoplamento entre os componentes, facilitando a testabilidade, a manutenção e a evolução do código de forma independente de frameworks e tecnologias externas.
 
-  * **Detecção de Despesas Recorrentes:** O bot identifica assinaturas e contas mensais e sugere o cadastro automático.
+A comunicação com os serviços de uso intensivo, como o de NLU e Machine Learning, é feita de forma assíncrona via **RabbitMQ**, o que torna a aplicação mais resiliente e ágil na resposta ao usuário.
 
-#### Planejamento e Visão de Futuro
 
-  * **Módulo de Metas:** Crie objetivos financeiros (ex: "Viagem", "Entrada do Apartamento"), defina prazos e valores, e acompanhe seu progresso.
-  * **Previsão de Fluxo de Caixa Inteligente:** Com base no seu histórico e utilizando um serviço dedicado de Machine Learning em Python, o bot projeta seu saldo futuro para evitar surpresas no fim do mês.
-  * **Orçamentos Inteligentes:** Defina orçamentos por categoria e receba insights sobre onde você pode economizar.
+### ✨ Funcionalidades Implementadas
 
-#### Finanças Colaborativas
+*   **✍️ Registro Conversacional:** Adição de despesas e receitas via linguagem natural (`"gastei 55,90 no almoço com o cartão do Itaú"`).
+*   **🤖 Comandos Intuitivos:** Interação rápida através de comandos e teclados interativos no Telegram (ex: `/resumo`, `/metas`).
+*   **🔔 Alertas Proativos:** Notificações automáticas sobre fechamento de faturas, proximidade de orçamentos e contas a pagar.
+*   **🔄 Detecção de Recorrência:** Identificação automática de despesas recorrentes (assinaturas, contas) para facilitar o cadastro.
+*   **🎯 Módulo de Metas:** Criação e acompanhamento de objetivos financeiros com prazos e valores definidos.
+*   **📈 Previsão de Fluxo de Caixa:** Projeção de saldo futuro com base no histórico de transações, utilizando um serviço de Machine Learning.
+*   **💰 Orçamentos por Categoria:** Definição de limites de gastos por categoria com insights para economia.
+*   **👥 Gestão de Grupos (Rachadinha):** Divisão de despesas em grupo, com cálculo automático de quem deve a quem.
+*   **🏦 Múltiplas Contas e Ativos:** Gerenciamento consolidado de contas correntes, cartões e carteira de investimentos.
 
-  * **Gestão de Grupos ("Rachadinha Inteligente"):** Crie grupos para viagens ou eventos, registre despesas compartilhadas e o bot calcula quem deve quanto para quem ao final.
+### 🚀 Como Rodar o Projeto
 
-#### Visão 360° do Patrimônio
-
-  * **Múltiplas Contas:** Gerencie diversas contas (corrente, poupança, carteira, cartões de crédito) em um só lugar.
-  * **Consolidação de Investimentos:** Adicione seus ativos (Ações, FIIs, Cripto) e acompanhe a rentabilidade e a evolução do seu patrimônio total.
-
-### Stack Tecnológico
-
-| Categoria                | Tecnologia                                                              |
-| ------------------------ | ----------------------------------------------------------------------- |
-| **Linguagem & Framework** | Java 17, Spring Boot 3, Python (para ML Service), Flask                 |
-| **Banco de Dados** | PostgreSQL, Flyway (migrations)                                         |
-| **Persistência** | Spring Data JPA, Hibernate                                              |
-| **Autenticação & Segurança** | Spring Security, JSON Web Token (JWT)                                   |
-| **Inteligência Artificial**| Rasa Open Source (para NLU, auto-hospedado), Scikit-learn, Pandas       |
-| **Mensageria Assíncrona** | RabbitMQ                                                                |
-| **Testes** | JUnit 5, Mockito, MockMvc, Testcontainers, RestAssured (E2E)            |
-| **Interface** | API de Bots do Telegram                                                 |
-| **Documentação da API** | Springdoc OpenAPI (Swagger UI)                                          |
-| **Monitoramento & Logs** | Prometheus, Grafana, Loki, Promtail                                     |
-| **Ferramentas Auxiliares** | Maven, Lombok, MapStruct                                                |
-| **Ambiente de Execução** | Docker, Docker Compose                                                  |
-
-### Arquitetura
-
-O projeto adota a **Arquitetura Limpa (Clean Architecture)**, garantindo a separação de responsabilidades e a independência de frameworks. A comunicação entre o bot e os serviços de processamento pesado (NLU, Machine Learning) é feita de forma assíncrona via **RabbitMQ** para garantir resiliência e uma resposta rápida ao usuário. Um serviço dedicado em Python lida com a lógica de Machine Learning para previsões.
-
-```mermaid
-graph TD
-    A[Usuário] -- Telegram --> B{FinanBot API/Bot};
-    B -- Publica Msg --> C[RabbitMQ];
-    D[Processador NLU/Core] -- Consome Msg --> C;
-    D -- Salva/Consulta --> E[PostgreSQL DB];
-    D -- Processa IA --> F[Rasa NLU];
-    D -- Envia Resposta --> B;
-    B -- Requisição ML --> G[ML Service (Python)];
-    G -- Retorna Previsão --> B;
-```
-
-### Observabilidade
-
-Para garantir a saúde e o desempenho da plataforma, o FinanBot integra um robusto stack de observabilidade:
-
-  * **Métricas com Prometheus & Grafana:** O Prometheus coleta métricas detalhadas da aplicação Spring Boot (via Actuator) e de outros serviços. O Grafana oferece dashboards interativos para visualizar essas métricas, permitindo o monitoramento em tempo real do sistema.
-  * **Logs Centralizados com Loki & Promtail:** O Promtail coleta os logs de todos os contêineres Docker e os envia para o Loki. O Loki armazena e indexa esses logs, que podem ser facilmente consultados e analisados através da interface do Grafana, facilitando a depuração e o diagnóstico de problemas.
-
-### Como Começar
-
-Siga os passos abaixo para executar a plataforma completa localmente.
+Siga os passos abaixo para executar a plataforma completa em seu ambiente local.
 
 #### 1\. Pré-requisitos
 
@@ -102,8 +58,8 @@ Siga os passos abaixo para executar a plataforma completa localmente.
 
 1.  **Clone o repositório:**
     ```bash
-    git clone https://github.com/seu-usuario/finanbot.git
-    cd finanbot
+    git https://github.com/gabrielboliveira-dev/FinanBot_API
+    cd FinanBot_API
     ```
 2.  **Configure as variáveis de ambiente:**
       * Renomeie o arquivo `.env.example` para `.env`.

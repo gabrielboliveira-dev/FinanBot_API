@@ -6,23 +6,26 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "accounts")
+@Table(name = "investments")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountEntity {
+public class InvestmentEntity {
     @Id
     private UUID id;
 
-    @Column(name = "user_id")
-    private UUID userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     private String name;
-
     private String type;
-
-    private BigDecimal balance;
+    private BigDecimal quantity;
+    private BigDecimal purchasePrice;
+    private BigDecimal currentPrice;
+    private LocalDateTime purchaseDate;
 }

@@ -1,6 +1,5 @@
 package com.finanbot.infra.persistence.entity;
 
-import com.finanbot.core.domain.model.TransactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +21,5 @@ public class CategoryEntity {
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private TransactionType type;
+    private String type;
 }

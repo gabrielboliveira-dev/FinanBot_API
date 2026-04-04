@@ -56,4 +56,44 @@ public class CoreInjectionConfig {
                 categoryRepository
         );
     }
+
+    @Bean
+    public CreateAlertUseCase createAlertUseCase(AlertRepository alertRepository, UserRepository userRepository) {
+        return new CreateAlertUseCase(alertRepository, userRepository);
+    }
+
+    @Bean
+    public CreateBudgetUseCase createBudgetUseCase(BudgetRepository budgetRepository, UserRepository userRepository) {
+        return new CreateBudgetUseCase(budgetRepository, userRepository);
+    }
+
+    @Bean
+    public CreateCashFlowPredictionUseCase createCashFlowPredictionUseCase(CashFlowPredictionRepository predictionRepository, UserRepository userRepository) {
+        return new CreateCashFlowPredictionUseCase(predictionRepository, userRepository);
+    }
+
+    @Bean
+    public CreateExpenseGroupUseCase createExpenseGroupUseCase(ExpenseGroupRepository expenseGroupRepository, UserRepository userRepository) {
+        return new CreateExpenseGroupUseCase(expenseGroupRepository, userRepository);
+    }
+
+    @Bean
+    public CreateGoalUseCase createGoalUseCase(GoalRepository goalRepository, UserRepository userRepository) {
+        return new CreateGoalUseCase(goalRepository, userRepository);
+    }
+
+    @Bean
+    public CreateInvestmentUseCase createInvestmentUseCase(InvestmentRepository investmentRepository, UserRepository userRepository) {
+        return new CreateInvestmentUseCase(investmentRepository, userRepository);
+    }
+
+    @Bean
+    public CreateRecurringExpenseUseCase createRecurringExpenseUseCase(RecurringExpenseRepository recurringExpenseRepository, UserRepository userRepository) {
+        return new CreateRecurringExpenseUseCase(recurringExpenseRepository, userRepository);
+    }
+
+    @Bean
+    public CreateSharedExpenseUseCase createSharedExpenseUseCase(SharedExpenseRepository sharedExpenseRepository, ExpenseGroupRepository expenseGroupRepository, UserRepository userRepository) {
+        return new CreateSharedExpenseUseCase(sharedExpenseRepository, expenseGroupRepository, userRepository);
+    }
 }

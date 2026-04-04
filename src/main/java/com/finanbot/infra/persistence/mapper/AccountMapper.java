@@ -1,6 +1,7 @@
 package com.finanbot.infra.persistence.mapper;
 
 import com.finanbot.core.domain.model.Account;
+import com.finanbot.core.domain.model.AccountType;
 import com.finanbot.infra.persistence.entity.AccountEntity;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,7 @@ public class AccountMapper {
                 account.getId(),
                 account.getUserId(),
                 account.getName(),
-                account.getType(),
+                account.getType() != null ? account.getType().name() : null,
                 account.getBalance()
         );
     }
@@ -22,7 +23,7 @@ public class AccountMapper {
                 entity.getId(),
                 entity.getUserId(),
                 entity.getName(),
-                entity.getType(),
+                entity.getType() != null ? AccountType.valueOf(entity.getType()) : null,
                 entity.getBalance()
         );
     }

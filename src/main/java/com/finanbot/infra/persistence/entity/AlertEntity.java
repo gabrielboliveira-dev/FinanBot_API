@@ -5,24 +5,24 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "accounts")
+@Table(name = "alerts")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountEntity {
+public class AlertEntity {
     @Id
     private UUID id;
 
-    @Column(name = "user_id")
-    private UUID userId;
-
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     private String type;
-
-    private BigDecimal balance;
+    private String message;
+    private LocalDateTime triggerDate;
+    private boolean isRead;
 }
