@@ -1,111 +1,120 @@
-# 🤖 FinanBot: Seu Co-piloto Financeiro Pessoal
+# 🤖 FinanBot: Seu Co-piloto Financeiro Pessoal no Telegram
 
-*Gestão financeira inteligente e conversacional, impulsionada por uma API robusta e IA.*
+## ✨ Visão Geral
 
----
+O FinanBot é uma plataforma inovadora de gestão financeira pessoal operada de forma conversacional através do Telegram. Desenvolvido para simplificar o controle de finanças, o projeto transforma a complexa tarefa de registrar gastos e planejar orçamentos em uma experiência fluida via chat, eliminando a necessidade de planilhas e aplicativos manuais.
 
-### 🎯 Sobre o Projeto
+A arquitetura foi rigorosamente projetada com base na **Arquitetura Limpa (Clean Architecture)**, **SOLID** e **Event-Driven Architecture (EDA)**. O núcleo do sistema é uma API RESTful em Java/Spring Boot, que se comunica de forma assíncrona com microsserviços de IA (para Processamento de Linguagem Natural e Machine Learning) utilizando mensageria robusta, garantindo um sistema altamente escalável, testável e responsivo.
 
-O FinanBot é uma plataforma de gerenciamento financeiro pessoal projetada para simplificar e automatizar o controle de finanças. O projeto resolve o desafio de transformar a complexa tarefa de gestão financeira em uma experiência conversacional e proativa, utilizando uma API RESTful como núcleo e um bot no Telegram como interface principal.
+## 🛠️ Tecnologias e Ferramentas
 
-A plataforma permite que os usuários registrem transações, definam metas, criem orçamentos e obtenham previsões de fluxo de caixa por meio de linguagem natural, eliminando a necessidade de planilhas e aplicativos manuais.
+A aplicação utiliza um ecossistema moderno, totalmente conteinerizado via Docker para garantir consistência entre os ambientes de desenvolvimento e produção:
 
-### 🛠️ Tecnologias e Ferramentas
+-   **Linguagem de Programação:** Java 17 e Python (Serviços de IA)
+-   **Framework Backend:** Spring Boot 3 (Web, Data JPA, Security, AMQP)
+    -   *Justificativa:* Ecossistema robusto, maduro e de alta performance para a construção de APIs e integrações complexas.
+-   **Mensageria Assíncrona:** RabbitMQ
+    -   *Justificativa:* Desacopla o recebimento das mensagens do Telegram do processamento pesado de IA e banco de dados, evitando o bloqueio de threads e garantindo a resiliência do bot.
+-   **Inteligência Artificial e NLU:** Rasa Open Source, Scikit-learn, Pandas (Python)
+    -   *Justificativa:* Stack especializada para interpretar intenções em linguagem natural (ex: *"gastei 50 no almoço"*) e gerar projeções preditivas de fluxo de caixa.
+-   **Persistência:** PostgreSQL e Spring Data JPA/Hibernate
+    -   *Justificativa:* Banco de dados relacional confiável para transações financeiras (ACID), com mapeamento objeto-relacional eficiente.
+-   **Migrações de Banco de Dados:** Flyway
+    -   *Justificativa:* Controle de versão automatizado do esquema do banco de dados (tabelas de contas, transações, usuários).
+-   **Segurança:** Spring Security, JWT (JSON Web Token) e BCrypt
+    -   *Justificativa:* Proteção das rotas da API RESTful e garantia de que os dados financeiros pertencem apenas ao usuário autenticado.
+-   **Integração Externa:** Telegram Bots API (Long Polling/Webhooks)
+    -   *Justificativa:* Interface principal com o usuário final, escolhida pela facilidade de uso e suporte a comandos ricos.
+-   **Testes:** JUnit 5, Mockito, Testcontainers, RestAssured
+    -   *Justificativa:* Cobertura completa englobando testes unitários e testes de integração de ponta a ponta (E2E) com banco de dados e mensageria reais em containers isolados.
+-   **CI/CD:** GitHub Actions
+    -   *Justificativa:* Pipeline automatizado que valida o build, executa a suíte de testes com Testcontainers e garante a qualidade a cada novo *commit*.
+-   **Observabilidade:** Prometheus, Grafana, Loki e Promtail
+    -   *Justificativa:* Stack completa para monitoramento de métricas de saúde da aplicação, dashboards visuais e agregação centralizada de logs.
 
-A stack foi escolhida para garantir performance, escalabilidade e manutenibilidade, utilizando tecnologias modernas e consolidadas no mercado.
+## 🏛️ Arquitetura
 
-| Categoria              | Tecnologia                 | Justificativa                                                                                                                   |
-| :--------------------- | :------------------------- | :------------------------------------------------------------------------------------------------------------------------------ |
-| **Backend**            | Java 17, Spring Boot 3     | Ecossistema robusto, maduro e de alta performance para a construção de APIs RESTful seguras e escaláveis.                         |
-| **Banco de Dados**     | PostgreSQL, Flyway         | Um banco de dados relacional poderoso e confiável, com migrations gerenciadas pelo Flyway para garantir consistência.             |
-| **Segurança**          | Spring Security, JWT       | Implementação padrão de mercado para autenticação e autorização, garantindo a proteção dos dados do usuário.                     |
-| **IA & Machine Learning** | Python, Scikit-learn       | Stack especializada para Processamento de Linguagem Natural (NLU) e para o serviço de previsão de fluxo de caixa.               |
-| **Mensageria**         | RabbitMQ                   | Garante a comunicação assíncrona entre a API principal e os serviços de IA, aumentando a resiliência e a responsividade.        |
-| **Testes**             | JUnit 5, Mockito, Testcontainers | Estratégia de testes completa, cobrindo desde testes de unidade até testes de integração com ambiente real (via Testcontainers). |
-| **Ambiente**           | Docker, Docker Compose     | Containerização de toda a aplicação, garantindo um ambiente de desenvolvimento e produção consistente e de fácil configuração.    |
-| **Observabilidade**    | Prometheus, Grafana, Loki  | Stack completa para monitoramento de métricas, visualização de dashboards e centralização de logs.                              |
+O projeto adota estritamente a **Clean Architecture**, isolando as regras de negócio das tecnologias de entrega (APIs, Banco de Dados, Mensageria):
 
-### 🏗️ Arquitetura
+-   **`core.domain`**: O coração do software. Contém as entidades ricas (`User`, `Account`, `Transaction`, `Category`) e Value Objects, encapsulando as regras de negócio puras sem dependência de frameworks.
+-   **`core.usecase`**: Contém a lógica da aplicação (`CreateTransactionUseCase`, `ProcessChatUseCase`). Orquestra as regras do domínio utilizando interfaces (Ports) para se comunicar com o mundo externo.
+-   **`infrastructure`**: A camada de adaptadores. Implementa os repositórios JPA, expõe os Controllers REST (API), gerencia a segurança (Filtros JWT), assina e publica na fila do RabbitMQ e faz a ponte com a API do Telegram.
 
-O projeto é estruturado com base nos princípios da **Arquitetura Limpa (Clean Architecture)**, promovendo uma clara separação de responsabilidades em camadas (Domínio, Aplicação, Infraestrutura). Essa abordagem garante um baixo acoplamento entre os componentes, facilitando a testabilidade, a manutenção e a evolução do código de forma independente de frameworks e tecnologias externas.
+## ✅ Funcionalidades Implementadas
 
-A comunicação com os serviços de uso intensivo, como o de NLU e Machine Learning, é feita de forma assíncrona via **RabbitMQ**, o que torna a aplicação mais resiliente e ágil na resposta ao usuário.
+### 💬 Interação e Automação via Telegram
+-   **Registro Conversacional (NLU):** Adição de despesas informando apenas o texto (ex: *"Gastei R$ 120 com Uber"*).
+-   **Assincronismo:** Respostas instantâneas do bot, com processamento financeiro ocorrendo em background.
+-   **Vínculo de Identidade:** Associação segura do `chatId` do Telegram com a conta do usuário cadastrada na API.
 
+### 💰 Gestão Financeira Centralizada
+-   **Múltiplas Contas:** Criação e gestão de saldos em diferentes contas (ex: Corrente, Poupança, Carteira).
+-   **Transações e Categorias:** Lançamento de receitas e despesas vinculadas a categorias personalizáveis para relatórios precisos.
+-   **Metas Financeiras:** Estabelecimento de objetivos com valores e prazos (ex: "Comprar Carro").
 
-### ✨ Funcionalidades Implementadas
+### 🔐 Segurança da Informação
+-   **Autenticação JWT:** API protegida para gerenciamento de dados via Dashboard Web/Mobile paralelo ao Bot.
+-   **Proteção de Dados Sensíveis:** Senhas criptografadas (BCrypt) e acesso restrito por `userId`.
 
-*   **✍️ Registro Conversacional:** Adição de despesas e receitas via linguagem natural (`"gastei 55,90 no almoço com o cartão do Itaú"`).
-*   **🤖 Comandos Intuitivos:** Interação rápida através de comandos e teclados interativos no Telegram (ex: `/resumo`, `/metas`).
-*   **🔔 Alertas Proativos:** Notificações automáticas sobre fechamento de faturas, proximidade de orçamentos e contas a pagar.
-*   **🔄 Detecção de Recorrência:** Identificação automática de despesas recorrentes (assinaturas, contas) para facilitar o cadastro.
-*   **🎯 Módulo de Metas:** Criação e acompanhamento de objetivos financeiros com prazos e valores definidos.
-*   **📈 Previsão de Fluxo de Caixa:** Projeção de saldo futuro com base no histórico de transações, utilizando um serviço de Machine Learning.
-*   **💰 Orçamentos por Categoria:** Definição de limites de gastos por categoria com insights para economia.
-*   **👥 Gestão de Grupos (Rachadinha):** Divisão de despesas em grupo, com cálculo automático de quem deve a quem.
-*   **🏦 Múltiplas Contas e Ativos:** Gerenciamento consolidado de contas correntes, cartões e carteira de investimentos.
+## ⚙️ Como Rodar o Projeto
 
-### 🚀 Como Rodar o Projeto
+1.  **Pré-requisitos:**
+    -   Tenha o **Java JDK 17+** e o **Maven** instalados.
+    -   Tenha o **Docker** e o **Docker Compose** em execução.
+    -   Um token de bot do Telegram (crie um conversando com o `@BotFather` no Telegram).
 
-Siga os passos abaixo para executar a plataforma completa em seu ambiente local.
-
-#### 1\. Pré-requisitos
-
-  * Java 17 JDK
-  * Maven 3.8+
-  * Docker e Docker Compose
-
-#### 2\. Configuração
-
-1.  **Clone o repositório:**
+2.  **Clone o Repositório:**
     ```bash
-    git https://github.com/gabrielboliveira-dev/FinanBot_API
+    git clone [https://github.com/gabrielboliveira-dev/FinanBot_API](https://github.com/gabrielboliveira-dev/FinanBot_API)
     cd FinanBot_API
     ```
-2.  **Configure as variáveis de ambiente:**
-      * Renomeie o arquivo `.env.example` para `.env`.
-      * Abra o arquivo `.env` e preencha as seguintes variáveis:
-          * `DB_PASSWORD`: Senha para o banco de dados PostgreSQL.
-          * `TELEGRAM_BOT_TOKEN`: Token do seu bot, obtido com o @BotFather no Telegram.
-          * `TELEGRAM_BOT_USERNAME`: Username do seu bot.
-          * `JWT_SECRET`: Uma chave secreta longa e segura para gerar os tokens JWT.
 
-#### 3\. Executando com Docker Compose
+3.  **Configurações de Ambiente (`.env`):**
+    -   Crie um arquivo `.env` na raiz do projeto e preencha as variáveis abaixo:
+        ```env
+        # Banco de Dados
+        DB_USERNAME=postgres
+        DB_PASSWORD=sua_senha_segura
+        DB_URL=jdbc:postgresql://db:5432/finanbot
+        
+        # Segurança da API
+        JWT_SECRET=SUA_CHAVE_SECRETA_MUITO_LONGA_E_COMPLEXA_AQUI_256_BITS
+        JWT_EXPIRATION=86400000
+        
+        # Telegram Bot
+        TELEGRAM_BOT_USERNAME=SeuBotUsername
+        TELEGRAM_BOT_TOKEN=123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZ
+        ```
 
-O `docker-compose.yml` está configurado para orquestrar todos os contêineres necessários (Aplicação Spring Boot, Serviço ML Python, Banco de Dados, Fila, NLU, Prometheus, Grafana, Loki e Promtail).
+4.  **Construir e Iniciar os Containers:**
+    ```bash
+    docker-compose up --build -d
+    ```
+    -   Este comando subirá toda a infraestrutura: A aplicação Spring Boot, o PostgreSQL, o RabbitMQ e a stack de observabilidade.
 
-Execute o comando na raiz do projeto:
+5.  **Acessar o Sistema:**
+    -   **Documentação Interativa (Swagger):** Acesse `http://localhost:8080/swagger-ui.html`.
+    -   **Bot do Telegram:** Procure pelo username do seu bot no Telegram e envie um `/start`!
 
-```bash
-docker-compose up --build
-```
+## 🗺️ Endpoints Principais (API REST)
 
-A aplicação pode levar alguns minutos para iniciar todos os serviços pela primeira vez.
+*A API serve como base para a criação de cadastros complexos, enquanto o Bot do Telegram atua como a interface do dia a dia.*
 
-### Uso da API RESTful
+| Método | Rota | Descrição |
+| :--- | :--- | :--- |
+| `POST` | `/api/v1/auth/register` | Registra um novo usuário no sistema. |
+| `POST` | `/api/v1/auth/login` | Autentica um usuário e retorna o token JWT. |
+| `POST` | `/api/v1/accounts` | Cria uma nova conta bancária ou carteira. |
+| `POST` | `/api/v1/categories` | Cadastra uma nova categoria de transação. |
+| `POST` | `/api/v1/transactions` | Registra uma nova despesa ou receita manualmente. |
+| `POST` | `/api/v1/goals` | Cria uma nova meta financeira associada ao usuário. |
 
-Após a inicialização, a API RESTful estará disponível em `http://localhost:8080`.
+## 🌟 Demonstração de Boas Práticas
 
-A documentação interativa da API (Swagger UI), gerada pelo Springdoc, pode ser acessada em:
-**[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)**
+Este projeto foi desenhado para ser um portfólio de engenharia de software avançada:
 
-Testes de ponta a ponta (E2E) para a API podem ser executados usando a classe `FinanBotE2ETest` (localizada em `src/test/java/com/finanbot/e2e/FinanBotE2ETest.java`), que utiliza Testcontainers para orquestrar o ambiente e RestAssured para interagir com os endpoints.
-
-### ⭐ Melhoria Futura: Conexão com Open Finance
-
-A integração com o Open Finance Brasil é a **visão de longo prazo** e o recurso mais poderoso do roadmap do FinanBot. Ele permitirá a importação e categorização automática de transações diretamente das suas contas bancárias.
-
-> **Observação Importante:** Devido aos complexos requisitos regulatórios e de certificação de segurança exigidos pelo Banco Central, não é viável para uma pessoa física ou um projeto de código aberto lançar esta funcionalidade para o público geral em um ambiente de produção. A implementação atual está focada nos ambientes de **Sandbox** do Open Finance para desenvolvimento e prova de conceito.
-
-### Como Contribuir
-
-Contribuições são muito bem-vindas\! Se você tem ideias para novas funcionalidades, melhorias ou encontrou algum bug, sinta-se à vontade para abrir uma *Issue* ou um *Pull Request*.
-
-1.  Faça um *Fork* do projeto.
-2.  Crie uma nova *Branch* (`git checkout -b feature/sua-feature`).
-3.  Faça o *Commit* das suas alterações (`git commit -m 'Adiciona sua-feature'`).
-4.  Faça o *Push* para a *Branch* (`git push origin feature/sua-feature`).
-5.  Abra um *Pull Request*.
-
-### Licença
-
-Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](https://www.google.com/search?q=LICENSE) para mais detalhes.
+-   **Event-Driven Architecture:** Uso do RabbitMQ e do padrão Producer/Consumer para evitar bloqueio de concorrência nas requisições web.
+-   **Testes com Testcontainers:** Testes de integração que sobem infraestrutura real no Docker, garantindo que o código funciona perfeitamente com o PostgreSQL e o RabbitMQ antes de ir para produção.
+-   **Ports and Adapters:** Inversão de dependência permitindo que o NLU mude de Regex local para uma API externa do Rasa/Python sem alterar uma única linha da regra de negócio (Core).
+-   **CI/CD Pipeline:** Integração contínua automatizada via GitHub Actions.
+-   **Design Orientado a Domínio (DDD):** Modelagem focada nas entidades de negócio reais e em suas invariantes estruturais.
