@@ -12,18 +12,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout do código
+      - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: ☕ Configurar o Java (JDK 17)
+      - name: Configurar o Java (JDK 17)
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: 🧪 Rodar Testes Unitários e de Integração
+      - name: Rodar Testes Unitários e de Integração
         run: mvn clean verify -B
 
-      - name: 📦 Construir Imagem Docker (Sanity Check)
+      - name: Construir Imagem Docker (Sanity Check)
         run: docker build -t finanbot-api:latest .
